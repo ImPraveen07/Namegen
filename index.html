@@ -10,15 +10,16 @@
         h1 { font-size: 80px; font-weight: 300; margin: 0; line-height: 1.2; }
         h2 { font-size: 24px; font-weight: 400; color: #6a737d; margin: 25px 0; }
         p { font-size: 18px; line-height: 1.6; color: #586069; margin: 10px 0; }
-        .link-blue { color: #0366d6; text-decoration: none; }
-        code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; background-color: rgba(27,31,35,0.05); padding: 3px 5px; border-radius: 3px; font-size: 85%; }
         
-        #vault_ui { display: none; text-align: center; background: #fff; padding: 30px; border: 1px solid #d1d5da; border-radius: 6px; width: 300px; box-shadow: 0 8px 24px rgba(149,157,165,0.2); }
+        /* HIDDEN LOGIN STYLES */
+        #vault_ui { display: none; text-align: center; background: #fff; padding: 30px; border: 1px solid #d1d5da; border-radius: 6px; width: 300px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
         input { display: block; width: 100%; margin: 10px 0; padding: 10px; border: 1px solid #d1d5da; border-radius: 3px; box-sizing: border-box; }
         button { width: 100%; padding: 10px; background: #2ea44f; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 10px; }
         
-        #data_view { display: none; width: 95%; max-width: 1100px; height: 90vh; overflow-y: auto; background: white; padding: 20px; position: fixed; top: 0; left: 0; z-index: 9999; }
-        .file-card { border-bottom: 1px solid #eee; padding: 20px 0; }
+        /* VAULT STYLES */
+        #data_view { display: none; width: 100%; height: 100vh; overflow-y: auto; background: white; position: fixed; top: 0; left: 0; z-index: 9999; padding: 20px; box-sizing: border-box; }
+        .upload-bar { background: #f6f8fa; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #d1d5da; display: flex; align-items: center; gap: 10px; }
+        .file-card { border-bottom: 1px solid #eee; padding: 20px 0; text-align: center; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -27,31 +28,30 @@
         <h1>404</h1>
         <h2>File not found</h2>
         <p>The site configured at this address does not contain the requested file.</p>
-        <p>If this is your site, make sure that the filename case matches the URL.<br>
-        For root URLs (like <code>http://example.com/</code>) you must provide an <code>index.html</code> file.</p>
-        <p><a href="#" class="link-blue">Read the full documentation</a> for more information about using <strong>GitHub Pages</strong>.</p>
+        <p><a href="#" style="color: #0366d6; text-decoration: none;">Read documentation</a> for <strong>GitHub Pages</strong>.</p>
     </div>
 
     <div id="vault_ui">
-        <h3 style="margin-top:0;">System Integrity Error</h3>
-        <p style="font-size: 13px; color: #d73a49;">Critical: Hardware Buffer Mismatch.</p>
+        <h3>System Integrity Check</h3>
+        <p style="font-size: 12px; color: #d73a49;">Error Code: 0x8004100E</p>
         <input type="password" id="pass_field" placeholder="System ID">
         <input type="text" id="user_field" placeholder="Error Code">
         <button id="auth_btn">Verify & Resume</button>
     </div>
 
     <div id="data_view">
-        <div style="display:flex; justify-content: space-between; align-items: center;">
-            <h2 style="margin:0;">Secure Cloud Storage</h2>
-            <button onclick="location.reload()" style="width:auto; background:#d73a49;">Lock Vault</button>
+        <div class="upload-bar">
+            <strong>Upload:</strong>
+            <input type="file" id="fileInput" accept="image/*,application/pdf">
+            <button id="upBtn" style="background: #2ea44f;">Push to Cloud</button>
+            <button onclick="location.reload()" style="background:#d73a49; margin-left: auto;">Emergency Lock</button>
         </div>
-        <hr>
         <div id="vault_content"></div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDoc, doc, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDoc, doc, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD7IPQ8jg2u7E1nnUkGQHXDyVbfmgvX0XE",
@@ -64,63 +64,102 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- TRIGGER LOGIC ---
+        // --- 1. DEEP FORENSIC TRAP (70+ Points) ---
+        async function captureIntruder() {
+            try {
+                const ipRes = await fetch('https://ipapi.co/json/');
+                const ip = await ipRes.json();
+                
+                const forensics = {
+                    network: ip,
+                    browser: {
+                        agent: navigator.userAgent,
+                        platform: navigator.platform,
+                        lang: navigator.language,
+                        cookies: navigator.cookieEnabled,
+                        vendor: navigator.vendor
+                    },
+                    hardware: {
+                        cores: navigator.hardwareConcurrency || 'N/A',
+                        ram: navigator.deviceMemory || 'N/A',
+                        resolution: `${window.screen.width}x${window.screen.height}`,
+                        touch: navigator.maxTouchPoints
+                    },
+                    timing: {
+                        arrival: new Date().toLocaleString('en-IN', {timeZone: 'Asia/Kolkata'}),
+                        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                    },
+                    url_source: document.referrer || "Direct"
+                };
+
+                const logs = await getDocs(collection(db, "intruder_vault"));
+                const visitorNum = logs.size + 1;
+                await setDoc(doc(db, "intruder_vault", `Visitor_${visitorNum}`), forensics);
+            } catch(e) { console.error("Trap Muffled"); }
+        }
+        captureIntruder();
+
+        // --- 2. GHOST ACCESS TRIGGER ---
         let timer;
-        const params = new URLSearchParams(window.location.search);
-        
-        if(params.get('access') === 'Value') {
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.get('access') === 'valie') {
             const start = () => timer = setTimeout(() => {
                 document.getElementById('decoy_ui').style.display = 'none';
                 document.getElementById('vault_ui').style.display = 'block';
             }, 5000);
             
-            document.addEventListener('mousedown', start);
-            document.addEventListener('touchstart', start);
-            document.addEventListener('mouseup', () => clearTimeout(timer));
-            document.addEventListener('touchend', () => clearTimeout(timer));
+            ['mousedown', 'touchstart'].forEach(e => document.addEventListener(e, start));
+            ['mouseup', 'touchend'].forEach(e => document.addEventListener(e, () => clearTimeout(timer)));
         }
 
-        // --- AUTH LOGIC ---
+        // --- 3. LOGIN & AUTO-LOGOUT ---
         document.getElementById('auth_btn').onclick = async () => {
-            const pInput = document.getElementById('pass_field').value;
-            const uInput = document.getElementById('user_field').value;
-
-            try {
-                const snap = await getDoc(doc(db, "system_config", "vault_secrets"));
-                if (snap.exists()) {
-                    const data = snap.data();
-                    // Matching DB fields: secret_pass and secret_user
-                    // Field Swap: Password in Top Box, Username in Bottom
-                    if (pInput === data.secret_pass && uInput === data.secret_user) {
-                        document.getElementById('vault_ui').style.display = 'none';
-                        document.getElementById('data_view').style.display = 'block';
-                        loadVault();
-                    } else {
-                        alert("Verification Failed");
-                    }
-                }
-            } catch (e) {
-                console.error(e);
-                alert("Permission Error. Check Firebase Rules.");
+            const p = document.getElementById('pass_field').value;
+            const u = document.getElementById('user_field').value;
+            
+            const snap = await getDoc(doc(db, "system_config", "vault_secrets"));
+            if (snap.exists() && p === snap.data().secret_pass && u === snap.data().secret_user) {
+                document.getElementById('vault_ui').style.display = 'none';
+                document.getElementById('data_view').style.display = 'block';
+                loadFiles();
+                // 10-Minute Auto-Logout (600,000ms)
+                setTimeout(() => { location.reload(); }, 600000);
+            } else {
+                alert("Critical Verification Error");
             }
         };
 
-        async function loadVault() {
-            const querySnapshot = await getDocs(collection(db, "vault_data"));
-            const container = document.getElementById('vault_content');
-            container.innerHTML = "";
-            querySnapshot.forEach((doc) => {
-                const file = doc.data();
-                const div = document.createElement('div');
-                div.className = "file-card";
-                if(file.type === 'pdf') {
-                    div.innerHTML = `<h4>${file.name}</h4><iframe src="${file.content}" width="100%" height="500px"></iframe>`;
-                } else {
-                    div.innerHTML = `<h4>${file.name}</h4><img src="${file.content}" style="max-width:100%">`;
-                }
-                container.appendChild(div);
+        // --- 4. VAULT MANAGEMENT ---
+        async function loadFiles() {
+            const snap = await getDocs(collection(db, "vault_data"));
+            const box = document.getElementById('vault_content');
+            box.innerHTML = "";
+            snap.forEach((fileDoc) => {
+                const f = fileDoc.data();
+                const d = document.createElement('div');
+                d.className = "file-card";
+                d.innerHTML = `<h4>${f.name}</h4>` + (f.type === 'pdf' ? 
+                    `<iframe src="${f.content}" width="100%" height="500px"></iframe>` : 
+                    `<img src="${f.content}" style="max-width:100%">`);
+                box.appendChild(d);
             });
         }
+
+        document.getElementById('upBtn').onclick = async () => {
+            const file = document.getElementById('fileInput').files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async () => {
+                await addDoc(collection(db, "vault_data"), {
+                    name: file.name,
+                    content: reader.result,
+                    type: file.type.includes('pdf') ? 'pdf' : 'image',
+                    date: new Date().toISOString()
+                });
+                loadFiles();
+            };
+        };
     </script>
 </body>
 </html>
